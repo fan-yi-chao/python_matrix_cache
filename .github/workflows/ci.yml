@@ -1,0 +1,26 @@
+
+name: Python CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    # PROBLEM 1: Only tests on Python 3.9. We need to support 3.8, 3.9, 3.10, and 3.11.
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+        # PROBLEM 2: No caching configured. 'pip install' is slow every time.
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run tests
+      run: pytest
